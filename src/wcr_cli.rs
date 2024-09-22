@@ -67,7 +67,7 @@ impl WcrCli {
                 p if p.is_dir() => {
                     println!("is dir")
                 }
-                p if p.is_file() => {
+                p if p.is_file() & self.lines & self.words & self.bytes => {
                     println!(
                         "{:4} {:4} {:4} {}",
                         count_lines(&path)?,
@@ -75,6 +75,15 @@ impl WcrCli {
                         count_bytes(&path)?,
                         path.to_str().unwrap()
                     )
+                }
+                p if p.is_file() & self.lines & !self.words & !self.bytes => {
+                    println!("{} {}", count_lines(&path)?, path.to_str().unwrap())
+                }
+                p if p.is_file() & !self.lines & self.words & !self.bytes => {
+                    println!("{} {}", count_words(&path)?, path.to_str().unwrap())
+                }
+                p if p.is_file() & !self.lines & !self.words & self.bytes => {
+                    println!("{} {}", count_bytes(&path)?, path.to_str().unwrap())
                 }
                 _ => panic!("Not implemented yet"),
             }
